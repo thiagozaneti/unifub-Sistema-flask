@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Base nav</title>
+</head>
+<body>
+    
+<nav class="bg-white border-gray-20">
+    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+        <a class="flex items-center ">
+            <img src="/static/img/Design sem nome (1).png" class="h-16 mr-3" alt="Flowbite Logo" />
+        </a>
+    </div>
+</nav>
+<nav class="bg-black">
+    <div class="max-w-screen-xl px-4 py-3 mx-auto">
+        <div class="flex items-center">
+            <ul class="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
+                <li>
+                    <a href="#" class="text-white  hover:underline" aria-current="page">Home</a>
+                </li>
+                <li>
+                    <a href="#" class="text-white hover:underline">Vestibular 2025</a>
+                </li>
+                <li>
+                    <a href="#" class="text-white  hover:underline">Vagas remamecentes</a>
+                </li>
+                <li>
+                    <a href="{{url_for('portalprofessor')}}" class="text-white  hover:underline">Área do professor</a>
+                </li>
+                <li>
+                    <a href="{{url_for('portalaluno')}}" class="text-white hover:underline">Área do Alunos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

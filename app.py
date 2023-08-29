@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required,logout_user, UserMixin
+from flask import make_response
+import time
 
 app = Flask(__name__)
 
@@ -20,40 +22,49 @@ class userprofessor(db.Model, UserMixin):
     def get_id(self):
         return str(self.id)
 
+#manager do identificado (id)
 @login_manager.user_loader
 def load_user(user_id):
     return userprofessor.query.get(int(user_id))
-
+##rota principal
 @app.route('/')
 def index():
     return render_template('index.html')
-
+##area do aluno
 @app.route('/areadoaluno')
 def portalaluno():
     return render_template('portalaluno.html')
-
+##login do professor
 @app.route("/areadoprofessor", methods=['POST', 'GET'])
 def portalprofessor():
+    message = ""
     if request.method == "POST":
         nome = request.form['nome']
         identificador = request.form['identificador']
         senha = request.form['senha']
-        
-        loginprof = userprofessor.query.filter_by(nome=nome, identificador=identificador, senha=senha).first()
 
+        loginprof = userprofessor.query.filter_by(nome=nome, identificador=identificador, senha=senha).first()
         if loginprof:
             login_user(loginprof)
-            return render_template('dsProf.html')
+            resp = make_response(render_template('dsProf.html'))
+            resp.set_cookie('usernamecookie', nome)
+            return resp
         else:
-            message = ""
+            message = "usuario inválido, tente novamente"
             return render_template('portalprofessor.html', message=message)
 
     return render_template("portalprofessor.html")
-
+##rota para o dashboard do professor 
 @app.route("/dsProfessor")
 @login_required
 def dsProfessor():
-    return render_template('dsProf.html')
+    name = request.cookies.get('usernamecookie')
+    return render_template("dsProf")
+
+
+
+#--------------------------------#
+
 
 if __name__ == '__main__':
     db.create_all()

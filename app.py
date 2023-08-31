@@ -23,8 +23,6 @@ class UserProfessor(db.Model, UserMixin):
     cadsenha = db.Column(db.String(10), nullable=False)
     cadtelefone = db.Column(db.String(11), nullable=False)
 
-    def get_id(self):
-        return str(self.id)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -42,12 +40,11 @@ def portalaluno():
 def portalprofessor():
     message = ""
     if request.method == "POST":
-        cadprinome = request.form['primeironome']
-        cadultname = request.form['segundonome']
-        cadidentificador = request.form['identificador']
-        cadsenha = request.form['senha']
-
-        userlogin = UserProfessor.query.filter_by(cadprinome=cadprinome, cadultname=cadultname, cadidentificador=cadidentificador, cadsenha=cadsenha).first()
+        formlogin_primeiro_nome = request.form['primeironome']
+        formlogin_ultimo_nome = request.form['segnome']
+        form_identificador = request.form['identificador']
+        form_senha = request.form['senha']
+        userlogin = UserProfessor.query.filter_by(cadprinome=formlogin_primeiro_nome, cadultname=formlogin_ultimo_nome, cadidentificador=form_identificador, cadsenha=form_senha).first()
 
         if userlogin:
             login_user(userlogin)
@@ -55,9 +52,8 @@ def portalprofessor():
             resp.set_cookie('usernamecookie', cadprinome)
             return resp
         else:
-            message = "Usuário inválido, tente novamente"
+            message = "Usuário inválido"
             return render_template('portalprofessor.html', message=message)
-
     return render_template("portalprofessor.html")
 
 @app.route("/dsProfessor")
@@ -78,9 +74,9 @@ def cadastro_professor():
         cadcargo = request.form['cad_cargo_prof']
         cadidentificador = request.form['cad_identificador_prof']
 
-        if len(cadsenha) < 8:
+        if len(cadsenha) < 5:
             message = 'Senha fraca, será necessário mais de 8 caracteres'
-        elif len(cadidentificador) != 5:
+        elif len(cadidentificador) <5:
             message = "Identificador deve ter exatos 5 caracteres"
         else:
             new_user_professor = UserProfessor(cademail=cademail, cadsenha=cadsenha, cadprinome=cadprinome, cadultname=cadultname, cadtelefone=cadtelefone, cadcargo=cadcargo, cadidentificador=cadidentificador)
